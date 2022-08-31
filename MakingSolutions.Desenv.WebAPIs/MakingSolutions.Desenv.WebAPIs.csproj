@@ -18,7 +18,10 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\MakingSolutions.Desenv.WebApi.Domain.Infrastructure\MakingSolutions.Desenv.WebApi.Domain.Infrastructure.csproj" />
+    <ProjectReference Include="..\MakingSolutions.Desenv.WebApi.Domain.Infrastructure\MakingSolutions.Desenv.WebApi.Infrastructure.csproj" />
+    <ProjectReference Include="..\MakingSolutions.Desenv.WebApi.Infrastructure\MakingSolutions.Desenv.WebApi.Infrastructure.csproj" />
   </ItemGroup>
+
+
 
 </Project>

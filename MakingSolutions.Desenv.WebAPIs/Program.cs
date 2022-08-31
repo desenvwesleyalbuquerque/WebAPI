@@ -1,12 +1,12 @@
 using AutoMapper;
-using MakingSolutions.Desenv.WebApi.Domain.Infrastructure.Configuration;
-using MakingSolutions.Desenv.WebApi.Domain.Infrastructure.Repository.Generics;
-using MakingSolutions.Desenv.WebApi.Domain.Infrastructure.Repository.Repositories;
 using MakingSolutions.Desenv.WebApi.Domain.Interfaces;
 using MakingSolutions.Desenv.WebApi.Domain.Interfaces.Generics;
 using MakingSolutions.Desenv.WebApi.Domain.Interfaces.InterfaceServices;
 using MakingSolutions.Desenv.WebApi.Domain.Services;
 using MakingSolutions.Desenv.WebApi.Entities.Entities;
+using MakingSolutions.Desenv.WebApi.Infrastructure.Configuration;
+using MakingSolutions.Desenv.WebApi.Infrastructure.Repository.Generics;
+using MakingSolutions.Desenv.WebApi.Infrastructure.Repository.Repositories;
 using MakingSolutions.Desenv.WebAPIs.Models;
 using MakingSolutions.Desenv.WebAPIs.Token;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -24,8 +24,9 @@ builder.Services.AddSwaggerGen();
 
 // ConfigServices
 builder.Services.AddDbContext<MyDbContext>(options =>
-              options.UseSqlServer(
-                  builder.Configuration.GetConnectionString("ConnectionStrings")));
+              options.UseSqlServer("Server=127.0.0.1;Initial Catalog=MakingSolutions;Persist Security Info=True;User ID=sa;Password=Qaswed12"));
+// builder.Configuration.GetConnectionString("DefaultConnection")));
+
 
 builder.Services.AddDefaultIdentity<ApplicationUser>(options => options.SignIn.RequireConfirmedAccount = true)
     .AddEntityFrameworkStores<MyDbContext>();
@@ -96,16 +97,18 @@ if (app.Environment.IsDevelopment())
 
 //app.UseCors(b => b.WithOrigins(urlDev, urlHML, urlPROD));
 
+
 var devClient = "http://localhost:4200";
 app.UseCors(x => x
 .AllowAnyOrigin()
 .AllowAnyMethod()
 .AllowAnyHeader().WithOrigins(devClient));
 
+
 app.UseHttpsRedirection();
 
-app.UseAuthorization();
 app.UseAuthentication();
+app.UseAuthorization();
 
 app.MapControllers();
 app.UseSwaggerUI();

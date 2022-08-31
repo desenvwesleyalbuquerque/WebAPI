@@ -1,14 +1,15 @@
-﻿using MakingSolutions.Desenv.WebApi.Domain.Infrastructure.Configuration;
+﻿using MakingSolutions.Desenv.WebApi.Infrastructure.Configuration;
 using MakingSolutions.Desenv.WebApi.Domain.Interfaces.Generics;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Win32.SafeHandles;
 using System.Runtime.InteropServices;
 
-namespace MakingSolutions.Desenv.WebApi.Domain.Infrastructure.Repository.Generics
+namespace MakingSolutions.Desenv.WebApi.Infrastructure.Repository.Generics
 {
     public class RepositoryGenerics<T> : IGeneric<T>, IDisposable where T : class
     {
         private readonly DbContextOptions<MyDbContext> _OptionsBuilder;
+
         public RepositoryGenerics()
         {
             _OptionsBuilder = new DbContextOptions<MyDbContext>();
@@ -16,44 +17,44 @@ namespace MakingSolutions.Desenv.WebApi.Domain.Infrastructure.Repository.Generic
 
         public async Task Add(T Objeto)
         {
-            using (var context = new MyDbContext(_OptionsBuilder))
+            using (var data = new MyDbContext(_OptionsBuilder))
             {
-                await context.Set<T>().AddAsync(Objeto);
-                await context.SaveChangesAsync();
+                await data.Set<T>().AddAsync(Objeto);
+                await data.SaveChangesAsync();
             }
         }
 
         public async Task Delete(T Objeto)
         {
-            using (var context = new MyDbContext(_OptionsBuilder))
+            using (var data = new MyDbContext(_OptionsBuilder))
             {
-                context.Set<T>().Remove(Objeto);
-                await context.SaveChangesAsync();
+                data.Set<T>().Remove(Objeto);
+                await data.SaveChangesAsync();
             }
         }
 
         public async Task<T> GetEntityById(int Id)
         {
-            using (var context = new MyDbContext(_OptionsBuilder))
+            using (var data = new MyDbContext(_OptionsBuilder))
             {
-                return await context.Set<T>().FindAsync(Id);
+                return await data.Set<T>().FindAsync(Id);
             }
         }
 
         public async Task<List<T>> List()
         {
-            using (var context = new MyDbContext(_OptionsBuilder))
+            using (var data = new MyDbContext(_OptionsBuilder))
             {
-                return await context.Set<T>().ToListAsync();
+                return await data.Set<T>().ToListAsync();
             }
         }
 
         public async Task Update(T Objeto)
         {
-            using (var context = new MyDbContext(_OptionsBuilder))
+            using (var data = new MyDbContext(_OptionsBuilder))
             {
-                context.Set<T>().Update(Objeto);
-                await context.SaveChangesAsync();
+                data.Set<T>().Update(Objeto);
+                await data.SaveChangesAsync();
             }
         }
 
@@ -89,6 +90,7 @@ namespace MakingSolutions.Desenv.WebApi.Domain.Infrastructure.Repository.Generic
             disposed = true;
         }
         #endregion
-    }
 
+
+    }
 }
