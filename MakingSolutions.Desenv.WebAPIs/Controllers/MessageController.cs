@@ -25,10 +25,9 @@ namespace MakingSolutions.Desenv.WebAPIs.Controllers
         [HttpPost("/api/Add")]
         public async Task<List<Notifies>> Add(MessageViewModel message)
         {
-            message.UserId = await GetIdUsuarioLogado();
+            message.UserId = await RetornarIdUsuarioLogado();
             var messageMap = _IMapper.Map<Message>(message);
             await _IMessage.Add(messageMap);
-
             return messageMap.Notificacoes;
         }
 
@@ -37,10 +36,8 @@ namespace MakingSolutions.Desenv.WebAPIs.Controllers
         [HttpPost("/api/Update")]
         public async Task<List<Notifies>> Update(MessageViewModel message)
         {
-            message.UserId = await GetIdUsuarioLogado();
             var messageMap = _IMapper.Map<Message>(message);
             await _IMessage.Update(messageMap);
-
             return messageMap.Notificacoes;
         }
 
@@ -49,10 +46,8 @@ namespace MakingSolutions.Desenv.WebAPIs.Controllers
         [HttpPost("/api/Delete")]
         public async Task<List<Notifies>> Delete(MessageViewModel message)
         {
-            message.UserId = await GetIdUsuarioLogado();
             var messageMap = _IMapper.Map<Message>(message);
             await _IMessage.Delete(messageMap);
-
             return messageMap.Notificacoes;
         }
 
@@ -61,7 +56,6 @@ namespace MakingSolutions.Desenv.WebAPIs.Controllers
         [HttpPost("/api/GetEntityById")]
         public async Task<MessageViewModel> GetEntityById(Message message)
         {
-
             message = await _IMessage.GetEntityById(message.MessageId);
             var messageMap = _IMapper.Map<MessageViewModel>(message);
             return messageMap;
@@ -72,12 +66,14 @@ namespace MakingSolutions.Desenv.WebAPIs.Controllers
         [HttpPost("/api/List")]
         public async Task<List<MessageViewModel>> List()
         {
-            var mensagens = _IMessage.List();
+            var mensagens = await _IMessage.List();
             var messageMap = _IMapper.Map<List<MessageViewModel>>(mensagens);
             return messageMap;
         }
 
-        private async Task<string> GetIdUsuarioLogado()
+
+
+        private async Task<string> RetornarIdUsuarioLogado()
         {
             if (User != null)
             {
@@ -86,6 +82,11 @@ namespace MakingSolutions.Desenv.WebAPIs.Controllers
             }
 
             return string.Empty;
+
         }
+
+
     }
+
 }
+

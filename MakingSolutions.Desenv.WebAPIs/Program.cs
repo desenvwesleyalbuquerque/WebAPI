@@ -4,9 +4,9 @@ using MakingSolutions.Desenv.WebApi.Domain.Interfaces.Generics;
 using MakingSolutions.Desenv.WebApi.Domain.Interfaces.InterfaceServices;
 using MakingSolutions.Desenv.WebApi.Domain.Services;
 using MakingSolutions.Desenv.WebApi.Entities.Entities;
-using MakingSolutions.Desenv.WebApi.Infrastructure.Configuration;
-using MakingSolutions.Desenv.WebApi.Infrastructure.Repository.Generics;
-using MakingSolutions.Desenv.WebApi.Infrastructure.Repository.Repositories;
+using MakingSolutions.Desenv.WebApi.Infra.Configuration;
+using MakingSolutions.Desenv.WebApi.Infra.Repository.Generics;
+using MakingSolutions.Desenv.WebApi.Infra.Repository.Repositories;
 using MakingSolutions.Desenv.WebAPIs.Models;
 using MakingSolutions.Desenv.WebAPIs.Token;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -22,16 +22,18 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-// ConfigServices
+//ConfigServices
 builder.Services.AddDbContext<MyDbContext>(options =>
-              options.UseSqlServer("Server=127.0.0.1;Initial Catalog=MakingSolutions;Persist Security Info=True;User ID=sa;Password=Qaswed12"));
-// builder.Configuration.GetConnectionString("DefaultConnection")));
+             options.UseSqlServer(
+                 builder.Configuration.GetConnectionString("DefaultConnection")));
 
 
 builder.Services.AddDefaultIdentity<ApplicationUser>(options => options.SignIn.RequireConfirmedAccount = true)
     .AddEntityFrameworkStores<MyDbContext>();
+
 builder.Services.AddControllersWithViews();
 builder.Services.AddRazorPages();
+
 
 // INTERFACE E REPOSITORIO
 builder.Services.AddSingleton(typeof(IGeneric<>), typeof(RepositoryGenerics<>));
