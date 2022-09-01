@@ -30,7 +30,7 @@ namespace MakingSolutions.Desenv.WebApi.Test
             using (var cliente = new HttpClient())
             {
                 string login = "admin@makingsolutions.com.br";
-                string senha = "!@#Qaswed12";
+                string senha = "@Qaswed12";
                 var dados = new
                 {
                     email = login,
