@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using MakingSolutions.Desenv.WebApi.Domain.Interfaces;
+using MakingSolutions.Desenv.WebApi.Domain.Interfaces.InterfaceServices;
 using MakingSolutions.Desenv.WebApi.Entities.Entities;
 using MakingSolutions.Desenv.WebAPIs.Models;
 using Microsoft.AspNetCore.Authorization;
@@ -13,11 +14,13 @@ namespace MakingSolutions.Desenv.WebAPIs.Controllers
     {
         private readonly IMapper _IMapper;
         private readonly IMessage _IMessage;
+        private readonly IServiceMessage _IServiceMessage;
 
-        public MessageController(IMapper IMapper, IMessage IMessage)
+        public MessageController(IMapper IMapper, IMessage IMessage, IServiceMessage IServiceMessage)
         {
             _IMapper = IMapper;
             _IMessage = IMessage;
+            _IServiceMessage = IServiceMessage;
         }
 
         [Authorize]
@@ -27,7 +30,8 @@ namespace MakingSolutions.Desenv.WebAPIs.Controllers
         {
             message.UserId = await RetornarIdUsuarioLogado();
             var messageMap = _IMapper.Map<Message>(message);
-            await _IMessage.Add(messageMap);
+            //await _IMessage.Add(messageMap);
+            await _IServiceMessage.Adicionar(messageMap);   
             return messageMap.Notificacoes;
         }
 
@@ -37,7 +41,8 @@ namespace MakingSolutions.Desenv.WebAPIs.Controllers
         public async Task<List<Notifies>> Update(MessageViewModel message)
         {
             var messageMap = _IMapper.Map<Message>(message);
-            await _IMessage.Update(messageMap);
+            //await _IMessage.Update(messageMap);
+            await _IServiceMessage.Atualizar(messageMap);
             return messageMap.Notificacoes;
         }
 
@@ -72,6 +77,16 @@ namespace MakingSolutions.Desenv.WebAPIs.Controllers
         }
 
 
+        [Authorize]
+        [Produces("application/json")]
+        [HttpPost("/api/ListarMensagensAtiva")]
+        public async Task<List<MessageViewModel>> ListarMensagensAtiva()
+        {
+            //var mensagens = await _IMessage.List();
+            var mensagens = await _IServiceMessage.ListarMensagensAtiva();
+            var messageMap = _IMapper.Map<List<MessageViewModel>>(mensagens);
+            return messageMap;
+        }
 
         private async Task<string> RetornarIdUsuarioLogado()
         {
