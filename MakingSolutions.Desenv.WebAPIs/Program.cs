@@ -1,4 +1,5 @@
 using AutoMapper;
+using DocumentFormat.OpenXml.Drawing.Diagrams;
 using MakingSolutions.Desenv.WebApi.Domain.Interfaces;
 using MakingSolutions.Desenv.WebApi.Domain.Interfaces.Generics;
 using MakingSolutions.Desenv.WebApi.Domain.Interfaces.InterfaceServices;
@@ -10,9 +11,11 @@ using MakingSolutions.Desenv.WebApi.Infra.Repository.Repositories;
 using MakingSolutions.Desenv.WebAPIs.Models;
 using MakingSolutions.Desenv.WebAPIs.Token;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using Ninject.Activation;
 using Swashbuckle.Swagger;
 using System.Reflection;
 
@@ -24,6 +27,18 @@ builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 //builder.Services.AddSwaggerGen();
+builder.Services.AddApiVersioning(setup =>
+{
+    setup.DefaultApiVersion = new ApiVersion(1, 0);
+    setup.AssumeDefaultVersionWhenUnspecified = true;
+    setup.ReportApiVersions = true;
+});
+
+builder.Services.AddVersionedApiExplorer(setup =>
+{
+    setup.GroupNameFormat = "'v'VVV";
+    setup.SubstituteApiVersionInUrl = true;
+});
 
 builder.Services.AddSwaggerGen(option =>
 {
@@ -42,6 +57,23 @@ builder.Services.AddSwaggerGen(option =>
             Name = "MakingSolutions - Wesley Albuquerque"
         }
     });
+
+    option.SwaggerDoc("v2", new OpenApiInfo
+    {
+        Version = "v2",
+        Title = "Integração",
+        Description = "Um exemplo de aplicação Web API .NET Core 6 | DDD | AutoMapper | IdentityFramework - CodeFirst ",
+        Contact = new OpenApiContact
+        {
+            Name = "Wesley Albuquerque",
+            Url = new Uri("https://github.com/desenvwesleyalbuquerque")
+        },
+        License = new OpenApiLicense
+        {
+            Name = "MakingSolutions - Wesley Albuquerque"
+        }
+    });
+
 
     option.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
     {
@@ -137,7 +169,16 @@ var app = builder.Build();
 //if (app.Environment.IsDevelopment())
 //{
 app.UseSwagger();
-app.UseSwaggerUI();
+
+
+
+app.UseSwaggerUI(options =>
+{
+    options.SwaggerEndpoint("/swagger/v1/swagger.json", "V1");
+    options.SwaggerEndpoint("/swagger/v2/swagger.json", "V2");
+});
+
+//app.UseSwaggerUI();
 //}
 
 //var urlDev = "https://dominiodocliente.com.br";
@@ -145,6 +186,15 @@ app.UseSwaggerUI();
 //var urlPROD = "https://dominiodocliente3.com.br";
 
 //app.UseCors(b => b.WithOrigins(urlDev, urlHML, urlPROD));
+
+//app.UseSwaggerUI(options =>
+//{
+//    options.SwaggerEndpoint("quot;/swagger/{description.GroupName}/swagger.json", "V1");
+//    options.SwaggerEndpoint("quot;/swagger/{description.GroupName}/swagger.json", "V2");
+
+ 
+//});
+
 
 
 var devClient = "http://localhost:4200";
@@ -160,6 +210,6 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
-app.UseSwaggerUI();
+//app.UseSwaggerUI();
 
 app.Run();
