@@ -1,7 +1,11 @@
-﻿using MakingSolutions.Desenv.WebApi.Entities.Entities;
+﻿
+using MakingSolutions.Desenv.WebApi.Entities.Entities;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
+using System.Reflection;
+
+//using System.Reflection;
 
 namespace MakingSolutions.Desenv.WebApi.Infra.Configuration
 {
