@@ -38,7 +38,7 @@ namespace MakingSolutions.Desenv.WebApi.Infra.Configuration
 
         public string ObterStringConexao()
         {
-            return "Server=127.0.0.1;Initial Catalog=MakingSolutions;Persist Security Info=True;User ID=sa;Password=Qaswed12";
+            return "Server=(localdb)\\mssqllocaldb;Database=MakingSolutions;Trusted_Connection=True;MultipleActiveResultSets=true";
         }
 
     }
