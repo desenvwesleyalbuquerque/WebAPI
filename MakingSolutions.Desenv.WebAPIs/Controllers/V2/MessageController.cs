@@ -6,12 +6,17 @@ using MakingSolutions.Desenv.WebAPIs.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
-namespace MakingSolutions.Desenv.WebAPIs.Controllers
+namespace MakingSolutions.Desenv.WebAPIs.Controllers.V2
 {
 
+    //[Authorize]
+    //[Route("api/[controller]")]
+    //[ApiController]
+
     [Authorize]
-    [Route("api/[controller]")]
     [ApiController]
+    [ApiVersion("2.0")]
+    [Route("v{version:apiVersion}/api/[controller]")]
     public class MessageController : ControllerBase
     {
         private readonly IMapper _IMapper;
@@ -28,7 +33,9 @@ namespace MakingSolutions.Desenv.WebAPIs.Controllers
         }
 
         [Produces("application/json")]
-        [HttpPost("/api/Add")]
+        //[HttpPost("/api/Add")]
+      
+        [HttpPost, Route("Add")]
         public async Task<List<Notifies>> Add(MessageViewModel message)
         {
             message.UserId = await RetornarIdUsuarioLogado();
@@ -38,37 +45,11 @@ namespace MakingSolutions.Desenv.WebAPIs.Controllers
             return messageMap.Notificacoes;
         }
 
-        [Produces("application/json")]
-        [HttpPost("/api/Update")]
-        public async Task<List<Notifies>> Update(MessageViewModel message)
-        {
-            var messageMap = _IMapper.Map<Message>(message);
-            //await _IMessage.Update(messageMap);
-            await _IServiceMessage.Atualizar(messageMap);
-            return messageMap.Notificacoes;
-        }
-
-        [Produces("application/json")]
-        [HttpPost("/api/Delete")]
-        public async Task<List<Notifies>> Delete(MessageViewModel message)
-        {
-            var messageMap = _IMapper.Map<Message>(message);
-            await _IMessage.Delete(messageMap);
-            return messageMap.Notificacoes;
-        }
-
-        [Produces("application/json")]
-        [HttpGet("/api/GetEntityById")]
-        public async Task<MessageViewModel> GetEntityById(int id)
-        {
-            var message = await _IMessage.GetEntityById(id);
-            var messageMap = _IMapper.Map<MessageViewModel>(message);
-            return messageMap;
-        }
-
+  
         [AllowAnonymous]
         [Produces("application/json")]
-        [HttpPost("/api/List")]
+        //[HttpPost("/api/List")]
+        [HttpPost, Route("List")]
         public async Task<List<MessageViewModel>> List()
         {
             var mensagens = await _IMessage.List();
@@ -76,15 +57,7 @@ namespace MakingSolutions.Desenv.WebAPIs.Controllers
             return messageMap;
         }
 
-        [Produces("application/json")]
-        [HttpPost("/api/ListarMensagensAtiva")]
-        public async Task<List<MessageViewModel>> ListarMensagensAtiva()
-        {
-            //var mensagens = await _IMessage.List();
-            var mensagens = await _IServiceMessage.ListarMensagensAtiva();
-            var messageMap = _IMapper.Map<List<MessageViewModel>>(mensagens);
-            return messageMap;
-        }
+
 
         private async Task<string> RetornarIdUsuarioLogado()
         {
