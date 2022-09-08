@@ -12,6 +12,7 @@ using MakingSolutions.Desenv.WebAPIs.Models;
 using MakingSolutions.Desenv.WebAPIs.Token;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ApiExplorer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
@@ -26,80 +27,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
-//builder.Services.AddSwaggerGen();
-builder.Services.AddApiVersioning(setup =>
-{
-    setup.DefaultApiVersion = new ApiVersion(1, 0);
-    setup.AssumeDefaultVersionWhenUnspecified = true;
-    setup.ReportApiVersions = true;
-});
-
-builder.Services.AddVersionedApiExplorer(setup =>
-{
-    setup.GroupNameFormat = "'v'VVV";
-    setup.SubstituteApiVersionInUrl = true;
-});
-
-builder.Services.AddSwaggerGen(option =>
-{
-    option.SwaggerDoc("v1", new OpenApiInfo
-    {
-        Version = "v1",
-        Title = "Integração",
-        Description = "Um exemplo de aplicação Web API .NET Core 6 | DDD | AutoMapper | IdentityFramework - CodeFirst ",
-        Contact = new OpenApiContact
-        {
-            Name = "Wesley Albuquerque",
-            Url = new Uri("https://github.com/desenvwesleyalbuquerque")
-        },
-        License = new OpenApiLicense
-        {
-            Name = "MakingSolutions - Wesley Albuquerque"
-        }
-    });
-
-    option.SwaggerDoc("v2", new OpenApiInfo
-    {
-        Version = "v2",
-        Title = "Integração",
-        Description = "Um exemplo de aplicação Web API .NET Core 6 | DDD | AutoMapper | IdentityFramework - CodeFirst ",
-        Contact = new OpenApiContact
-        {
-            Name = "Wesley Albuquerque",
-            Url = new Uri("https://github.com/desenvwesleyalbuquerque")
-        },
-        License = new OpenApiLicense
-        {
-            Name = "MakingSolutions - Wesley Albuquerque"
-        }
-    });
-
-
-    option.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
-    {
-        In = ParameterLocation.Header,
-        Description = "Insira um token válido",
-        Name = "Authorization",
-        Type = SecuritySchemeType.Http,
-        BearerFormat = "JWT",
-        Scheme = "Bearer"
-    });
-    option.AddSecurityRequirement(new OpenApiSecurityRequirement
-    {
-        {
-            new OpenApiSecurityScheme
-            {
-                Reference = new OpenApiReference
-                {
-                    Type=ReferenceType.SecurityScheme,
-                    Id="Bearer"
-                }
-            },
-            new string[]{}
-        }
-    });
-});
-
+builder.Services.AddSwaggerGen();
 
 //ConfigServices
 builder.Services.AddDbContext<MyDbContext>(options =>
@@ -112,7 +40,6 @@ builder.Services.AddDefaultIdentity<ApplicationUser>(options => options.SignIn.R
 
 builder.Services.AddControllersWithViews();
 builder.Services.AddRazorPages();
-
 
 // INTERFACE E REPOSITORIO
 builder.Services.AddSingleton(typeof(IGeneric<>), typeof(RepositoryGenerics<>));
@@ -153,7 +80,6 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
           };
       });
 
-
 var config = new AutoMapper.MapperConfiguration(cfg =>
 {
     cfg.CreateMap<MessageViewModel, Message>();
@@ -163,6 +89,69 @@ var config = new AutoMapper.MapperConfiguration(cfg =>
 IMapper mapper = config.CreateMapper();
 builder.Services.AddSingleton(mapper);
 
+
+builder.Services.AddVersionedApiExplorer(options =>
+{
+
+    //options.DefaultApiVersionParameterDescription = "Do NOT modify api-version!";
+    //options.AssumeDefaultVersionWhenUnspecified = true;
+
+    //options.DefaultApiVersion = new ApiVersion(1, 0);
+    //options.AssumeDefaultVersionWhenUnspecified = true;
+    options.GroupNameFormat = "'v'VVV";
+    //options.SubstituteApiVersionInUrl = true;
+});
+
+builder.Services.AddApiVersioning(setup =>
+{
+    setup.DefaultApiVersion = new ApiVersion(1, 0);
+    //setup.ReportApiVersions = true;
+});
+
+builder.Services.AddSwaggerGen(option =>
+{
+    option.SwaggerDoc("v1", new OpenApiInfo
+    {
+        Version = "v1",
+        Title = "Integração",
+        Description = "Um exemplo de aplicação Web API .NET Core 6 | DDD | AutoMapper | IdentityFramework - CodeFirst "
+    });
+
+    option.SwaggerDoc("v2", new OpenApiInfo
+    {
+        Version = "v2",
+        Title = "Integração",
+        Description = "Um exemplo de aplicação Web API .NET Core 6 | DDD | AutoMapper | IdentityFramework - CodeFirst "
+    });
+
+    option.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+    {
+        In = ParameterLocation.Header,
+        Description = "Insira um token válido",
+        Name = "Authorization",
+        Type = SecuritySchemeType.Http,
+        BearerFormat = "JWT",
+        Scheme = "Bearer"
+    });
+
+    option.AddSecurityRequirement(new OpenApiSecurityRequirement
+    {
+        {
+            new OpenApiSecurityScheme
+            {
+                Reference = new OpenApiReference
+                {
+                    Type=ReferenceType.SecurityScheme,
+                    Id="Bearer"
+                }
+            },
+            new string[]{}
+        }
+    });
+
+});
+
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -170,31 +159,14 @@ var app = builder.Build();
 //{
 app.UseSwagger();
 
-
-
-app.UseSwaggerUI(options =>
-{
-    options.SwaggerEndpoint("/swagger/v1/swagger.json", "V1");
-    options.SwaggerEndpoint("/swagger/v2/swagger.json", "V2");
-});
-
-//app.UseSwaggerUI();
 //}
+
 
 //var urlDev = "https://dominiodocliente.com.br";
 //var urlHML = "https://dominiodocliente2.com.br";
 //var urlPROD = "https://dominiodocliente3.com.br";
 
 //app.UseCors(b => b.WithOrigins(urlDev, urlHML, urlPROD));
-
-//app.UseSwaggerUI(options =>
-//{
-//    options.SwaggerEndpoint("quot;/swagger/{description.GroupName}/swagger.json", "V1");
-//    options.SwaggerEndpoint("quot;/swagger/{description.GroupName}/swagger.json", "V2");
-
- 
-//});
-
 
 
 var devClient = "http://localhost:4200";
@@ -210,6 +182,21 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
-//app.UseSwaggerUI();
+
+app.UseSwaggerUI(config =>
+{
+    var apiProvider = app.Services.GetRequiredService<IApiVersionDescriptionProvider>();
+
+    foreach (var version in apiProvider.ApiVersionDescriptions.Reverse())
+        config.SwaggerEndpoint($"/swagger/{version.GroupName}/swagger.json", $"v{version.ApiVersion}{(version.IsDeprecated ? " - Depreciada" : "")}");
+});
 
 app.Run();
+
+
+
+
+
+
+
+
