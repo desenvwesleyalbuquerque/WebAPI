@@ -27,4 +27,4 @@ Se faz necessário realizar a instalação das aplicações/frameworks abaixo:
 
 ## :rocket: API's externas
 
- - **[Documentação Api Pic Pay atualizada em (29/08/2022)](https://jira.linx.com.br//attachment/795108/795108_Doc.+TEF-Connect+Adapter+v3.03.pdf)**
+ - **[Documentação Api  atualizada em (29/08/2022)](https://jir.+TEF-Connect+Adapter+v3.03.pdf)**
