@@ -40,7 +40,7 @@ namespace MakingSolutions.Desenv.WebAPIs.Controllers.V1
 
 
         [Produces("application/json")]
-        [HttpPost, Route("Update")]
+        [HttpPost, Route("UpdateMessage")]
         public async Task<List<Notifies>> Update(MessageViewModel message)
         {
             var messageMap = _IMapper.Map<Message>(message);
