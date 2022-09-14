@@ -6,7 +6,7 @@ namespace MakingSolutions.Desenv.WebAPIs.Token
 {
     public class TokenJWTBuilder
     {
-        private SecurityKey securityKey = null;
+        private SecurityKey? securityKey = null;
         private string subject = "";
         private string issuer = "";
         private string audience = "";
