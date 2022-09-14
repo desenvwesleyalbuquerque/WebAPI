@@ -29,7 +29,7 @@ namespace MakingSolutions.Desenv.WebAPIs.Controllers.V1
 
         [Produces("application/json")]
 
-        [HttpPost, Route("Add")]
+        [HttpPost, Route("AddMessage")]
         public async Task<List<Notifies>> AddMessage(MessageViewModel message)
         {
             message.UserId = await RetornarIdUsuarioLogado();
