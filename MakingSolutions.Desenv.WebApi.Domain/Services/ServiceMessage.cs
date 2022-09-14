@@ -13,7 +13,7 @@ namespace MakingSolutions.Desenv.WebApi.Domain.Services
             _IMessage = message;
         }
 
-        public async Task Adicionar(Message Objeto)
+        public async Task AddMessage(Message Objeto)
         {
             var validaTitulo = Objeto.ValidaPropiedadeString(Objeto.Titulo, "Título");
             if (validaTitulo)
@@ -21,23 +21,26 @@ namespace MakingSolutions.Desenv.WebApi.Domain.Services
                 Objeto.DataCadastro = DateTime.Now;
                 Objeto.DataAlteracao = DateTime.Now;
                 Objeto.Ativo = true;
-                await _IMessage.Add(Objeto);
+                await _IMessage.AddMessage(Objeto);
+
+                //await _IMessage.Add(Objeto);
             }
         }
 
-        public async Task Atualizar(Message Objeto)
+        public async Task UpdateMessage(Message Objeto)
         {
             var validaTitulo = Objeto.ValidaPropiedadeString(Objeto.Titulo, "Título");
             if (validaTitulo)
             {
                 Objeto.DataAlteracao = DateTime.Now;
-                await _IMessage.Update(Objeto);
+                await _IMessage.UpdateMessage(Objeto);
+                //await _IMessage.Update(Objeto);
             }
         }
 
-        public async Task<List<Message>> ListarMensagensAtiva()
+        public async Task<List<Message>> ListAtiveMessage()
         {
-            return await _IMessage.ListarMessage(x => x.Ativo);
+            return await _IMessage.ListMessage(x => x.Ativo);
         }
     }
 }
