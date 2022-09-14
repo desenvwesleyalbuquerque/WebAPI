@@ -32,7 +32,7 @@ namespace MakingSolutions.Desenv.WebAPIs.Controllers.V1
             _IServiceMessage = IServiceMessage;
         }
 
-        [Produces("application/json")]       
+        [Produces("application/json")]
 
         [HttpPost, Route("Add")]
         public async Task<List<Notifies>> Add(MessageViewModel message)
@@ -44,7 +44,7 @@ namespace MakingSolutions.Desenv.WebAPIs.Controllers.V1
             return messageMap.Notificacoes;
         }
 
-    
+
         [Produces("application/json")]
         //[HttpPost("/api/Update")]
         [HttpPost, Route("Update")]
@@ -56,7 +56,7 @@ namespace MakingSolutions.Desenv.WebAPIs.Controllers.V1
             return messageMap.Notificacoes;
         }
 
-    
+
         [Produces("application/json")]
         //[HttpPost("/api/Delete")]
         [HttpPost, Route("Delete")]
@@ -67,7 +67,7 @@ namespace MakingSolutions.Desenv.WebAPIs.Controllers.V1
             return messageMap.Notificacoes;
         }
 
- 
+
         [Produces("application/json")]
         //[HttpGet("/api/GetEntityById")]
         [HttpGet, Route("GetEntityById")]
@@ -78,7 +78,16 @@ namespace MakingSolutions.Desenv.WebAPIs.Controllers.V1
             return messageMap;
         }
 
-     
+        [Produces("application/json")]
+        //[HttpGet("/api/GetEntityById")]
+        [HttpGet, Route("GetMessageById")]
+        public async Task<MessageViewModel> GetMessageById(int id)
+        {
+            var message = await _IMessage.GetMessageById(id);
+            var messageMap = _IMapper.Map<MessageViewModel>(message);
+            return messageMap;
+        }
+
         [AllowAnonymous]
         [Produces("application/json")]
         //[HttpPost("/api/List")]
@@ -90,7 +99,7 @@ namespace MakingSolutions.Desenv.WebAPIs.Controllers.V1
             return messageMap;
         }
 
-      
+
         [Produces("application/json")]
         //[HttpPost("/api/ListarMensagensAtiva")]
         [HttpPost, Route("ListarMensagensAtiva")]
