@@ -1,5 +1,4 @@
 using AutoMapper;
-using DocumentFormat.OpenXml.Drawing.Diagrams;
 using MakingSolutions.Desenv.WebApi.Domain.Interfaces;
 using MakingSolutions.Desenv.WebApi.Domain.Interfaces.Generics;
 using MakingSolutions.Desenv.WebApi.Domain.Interfaces.InterfaceServices;
@@ -16,9 +15,6 @@ using Microsoft.AspNetCore.Mvc.ApiExplorer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
-using Ninject.Activation;
-using Swashbuckle.Swagger;
-using System.Reflection;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -30,13 +26,13 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 //ConfigServices
-builder.Services.AddDbContext<MyDbContext>(options =>
+builder.Services.AddDbContext<AppDbContext>(options =>
              options.UseSqlServer(
-                 builder.Configuration.GetConnectionString("DefaultConnection")));
+                 builder.Configuration.GetConnectionString("AppDbContext")));
 
 
 builder.Services.AddDefaultIdentity<ApplicationUser>(options => options.SignIn.RequireConfirmedAccount = true)
-    .AddEntityFrameworkStores<MyDbContext>();
+    .AddEntityFrameworkStores<AppDbContext>();
 
 builder.Services.AddControllersWithViews();
 builder.Services.AddRazorPages();
@@ -47,6 +43,9 @@ builder.Services.AddSingleton<IMessage, RepositoryMessage>();
 
 // SERVIÇO DOMINIO
 builder.Services.AddSingleton<IServiceMessage, ServiceMessage>();
+
+//// Redis
+//builder.Services.AddSingleton<ICacheClient, RedisClient>();
 
 
 // JWT
@@ -169,11 +168,11 @@ app.UseSwagger();
 //app.UseCors(b => b.WithOrigins(urlDev, urlHML, urlPROD));
 
 
-var devClient = "http://localhost:4200";
-app.UseCors(x => x
-.AllowAnyOrigin()
-.AllowAnyMethod()
-.AllowAnyHeader().WithOrigins(devClient));
+//var devClient = "http://localhost:4200";
+//app.UseCors(x => x
+//.AllowAnyOrigin()
+//.AllowAnyMethod()s
+//.AllowAnyHeader().WithOrigins(devClient));
 
 
 app.UseHttpsRedirection();

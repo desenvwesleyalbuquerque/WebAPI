@@ -1,7 +1,9 @@
 ﻿using MakingSolutions.Desenv.WebApi.Domain.Interfaces.Generics;
 using MakingSolutions.Desenv.WebApi.Infra.Configuration;
+using MakingSolutions.Desenv.WebApi.Infra.Repository.Cache;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Win32.SafeHandles;
+using StackExchange.Redis;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,18 +13,19 @@ using System.Threading.Tasks;
 
 namespace MakingSolutions.Desenv.WebApi.Infra.Repository.Generics
 {
-public class RepositoryGenerics<T> : IGeneric<T>, IDisposable where T : class
+    public class RepositoryGenerics<T> : IGeneric<T>, IDisposable where T : class
     {
-        private readonly DbContextOptions<MyDbContext> _OptionsBuilder;
+        private readonly DbContextOptions<AppDbContext> _OptionsBuilder;
+        private readonly IConnectionMultiplexer _redis;
 
         public RepositoryGenerics()
         {
-            _OptionsBuilder = new DbContextOptions<MyDbContext>();
+            _OptionsBuilder = new DbContextOptions<AppDbContext>();
         }
 
         public async Task Add(T Objeto)
         {
-            using (var data = new MyDbContext(_OptionsBuilder))
+            using (var data = new AppDbContext(_OptionsBuilder))
             {
                 await data.Set<T>().AddAsync(Objeto);
                 await data.SaveChangesAsync();
@@ -31,7 +34,7 @@ public class RepositoryGenerics<T> : IGeneric<T>, IDisposable where T : class
 
         public async Task Delete(T Objeto)
         {
-            using (var data = new MyDbContext(_OptionsBuilder))
+            using (var data = new AppDbContext(_OptionsBuilder))
             {
                 data.Set<T>().Remove(Objeto);
                 await data.SaveChangesAsync();
@@ -40,7 +43,7 @@ public class RepositoryGenerics<T> : IGeneric<T>, IDisposable where T : class
 
         public async Task<T> GetEntityById(int Id)
         {
-            using (var data = new MyDbContext(_OptionsBuilder))
+            using (var data = new AppDbContext(_OptionsBuilder))
             {
                 return await data.Set<T>().FindAsync(Id);
             }
@@ -48,7 +51,7 @@ public class RepositoryGenerics<T> : IGeneric<T>, IDisposable where T : class
 
         public async Task<List<T>> List()
         {
-            using (var data = new MyDbContext(_OptionsBuilder))
+            using (var data = new AppDbContext(_OptionsBuilder))
             {
                 return await data.Set<T>().ToListAsync();
             }
@@ -56,7 +59,7 @@ public class RepositoryGenerics<T> : IGeneric<T>, IDisposable where T : class
 
         public async Task Update(T Objeto)
         {
-            using (var data = new MyDbContext(_OptionsBuilder))
+            using (var data = new AppDbContext(_OptionsBuilder))
             {
                 data.Set<T>().Update(Objeto);
                 await data.SaveChangesAsync();
