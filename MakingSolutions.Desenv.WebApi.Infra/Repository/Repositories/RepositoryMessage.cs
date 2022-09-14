@@ -1,29 +1,19 @@
-﻿using AutoMapper;
-using MakingSolutions.Desenv.WebApi.Domain.Interfaces;
+﻿using MakingSolutions.Desenv.WebApi.Domain.Interfaces;
 using MakingSolutions.Desenv.WebApi.Entities.Entities;
 using MakingSolutions.Desenv.WebApi.Infra.Configuration;
 using MakingSolutions.Desenv.WebApi.Infra.Repository.Cache;
 using MakingSolutions.Desenv.WebApi.Infra.Repository.Generics;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
-using StackExchange.Redis;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Linq.Expressions;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace MakingSolutions.Desenv.WebApi.Infra.Repository.Repositories
 {
     public class RepositoryMessage : RepositoryGenerics<Message>, IMessage
     {
         private readonly DbContextOptions<AppDbContext> _OptionsBuilder;
-        //private readonly IConnectionMultiplexer _redis;
-        //private readonly IDatabase _database;
         private readonly RedisClient _database;
 
-        private readonly IMapper _IMapper;
         public RepositoryMessage()
         {
             _OptionsBuilder = new DbContextOptions<AppDbContext>();
@@ -92,7 +82,7 @@ namespace MakingSolutions.Desenv.WebApi.Infra.Repository.Repositories
 
         public async Task<Message> GetMessageCacheAsync(int messageId)
         {
-            Message message = null;
+            Message? message = null;
 
             string value = await _database.StringGetAsync(messageId.ToString());
             if (string.IsNullOrWhiteSpace(value))
