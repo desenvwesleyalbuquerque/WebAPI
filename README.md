@@ -20,10 +20,11 @@ Se faz necessário realizar a instalação das aplicações/frameworks abaixo:
 
 ## :wrench: Tecnologias utilizadas
 * .NET Core 6.0;
-* CQRS;
-* Entity Framework 6;
+* Entity Framework Code First;
 * AutoMapper;
+* Redis;
 * Mediator;
+* CQRS;
 
 ## :rocket: API's externas
 
