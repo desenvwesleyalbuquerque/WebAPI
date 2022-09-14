@@ -8,11 +8,6 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace MakingSolutions.Desenv.WebAPIs.Controllers.V1
 {
-
-    //[Authorize]
-    //[Route("api/[controller]")]
-    //[ApiController]
-
     [Authorize]
     [ApiController]
     [ApiVersion("1.0")]
@@ -34,64 +29,48 @@ namespace MakingSolutions.Desenv.WebAPIs.Controllers.V1
 
         [Produces("application/json")]
 
-        [HttpPost, Route("Add")]
-        public async Task<List<Notifies>> Add(MessageViewModel message)
+        [HttpPost, Route("AddMessage")]
+        public async Task<List<Notifies>> AddMessage(MessageViewModel message)
         {
             message.UserId = await RetornarIdUsuarioLogado();
             var messageMap = _IMapper.Map<Message>(message);
-            //await _IMessage.Add(messageMap);
-            await _IServiceMessage.Adicionar(messageMap);
+            await _IMessage.AddMessage(messageMap);
             return messageMap.Notificacoes;
         }
 
 
         [Produces("application/json")]
-        //[HttpPost("/api/Update")]
-        [HttpPost, Route("Update")]
+        [HttpPost, Route("UpdateMessage")]
         public async Task<List<Notifies>> Update(MessageViewModel message)
         {
             var messageMap = _IMapper.Map<Message>(message);
-            //await _IMessage.Update(messageMap);
-            await _IServiceMessage.Atualizar(messageMap);
+            await _IMessage.UpdateMessage(messageMap);
             return messageMap.Notificacoes;
         }
 
 
         [Produces("application/json")]
-        //[HttpPost("/api/Delete")]
-        [HttpPost, Route("Delete")]
-        public async Task<List<Notifies>> Delete(MessageViewModel message)
+        [HttpPost, Route("DeleteMessage")]
+        public async Task<List<Notifies>> DeleteMessage(MessageViewModel message)
         {
             var messageMap = _IMapper.Map<Message>(message);
-            await _IMessage.Delete(messageMap);
+            await _IMessage.DeleteMessage(messageMap);
             return messageMap.Notificacoes;
         }
 
 
         [Produces("application/json")]
-        //[HttpGet("/api/GetEntityById")]
-        [HttpGet, Route("GetEntityById")]
-        public async Task<MessageViewModel> GetEntityById(int id)
+        [HttpGet, Route("SearchMessageById")]
+        public async Task<MessageViewModel> SearchMessageById(int id)
         {
-            var message = await _IMessage.GetEntityById(id);
-            var messageMap = _IMapper.Map<MessageViewModel>(message);
-            return messageMap;
-        }
-
-        [Produces("application/json")]
-        //[HttpGet("/api/GetEntityById")]
-        [HttpGet, Route("GetMessageById")]
-        public async Task<MessageViewModel> GetMessageById(int id)
-        {
-            var message = await _IMessage.GetMessageById(id);
+            var message = await _IMessage.SearchMessageById(id);
             var messageMap = _IMapper.Map<MessageViewModel>(message);
             return messageMap;
         }
 
         [AllowAnonymous]
         [Produces("application/json")]
-        //[HttpPost("/api/List")]
-        [HttpPost, Route("List")]
+        [HttpPost, Route("ListAll")]
         public async Task<List<MessageViewModel>> List()
         {
             var mensagens = await _IMessage.List();
@@ -100,13 +79,13 @@ namespace MakingSolutions.Desenv.WebAPIs.Controllers.V1
         }
 
 
+        [Obsolete("Método Obsolete")]
+        [AllowAnonymous]
         [Produces("application/json")]
-        //[HttpPost("/api/ListarMensagensAtiva")]
-        [HttpPost, Route("ListarMensagensAtiva")]
-        public async Task<List<MessageViewModel>> ListarMensagensAtiva()
+        [HttpPost, Route("ListAtiveMessage")]
+        public async Task<List<MessageViewModel>> ListAtiveMessage()
         {
-            //var mensagens = await _IMessage.List();
-            var mensagens = await _IServiceMessage.ListarMensagensAtiva();
+            var mensagens = await _IServiceMessage.ListAtiveMessage();
             var messageMap = _IMapper.Map<List<MessageViewModel>>(mensagens);
             return messageMap;
         }
@@ -120,7 +99,6 @@ namespace MakingSolutions.Desenv.WebAPIs.Controllers.V1
             }
 
             return string.Empty;
-
         }
     }
 

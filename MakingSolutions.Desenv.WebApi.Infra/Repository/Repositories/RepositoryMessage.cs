@@ -19,7 +19,7 @@ namespace MakingSolutions.Desenv.WebApi.Infra.Repository.Repositories
     public class RepositoryMessage : RepositoryGenerics<Message>, IMessage
     {
         private readonly DbContextOptions<AppDbContext> _OptionsBuilder;
-        private readonly IConnectionMultiplexer _redis;
+        //private readonly IConnectionMultiplexer _redis;
         //private readonly IDatabase _database;
         private readonly RedisClient _database;
 
@@ -30,7 +30,27 @@ namespace MakingSolutions.Desenv.WebApi.Infra.Repository.Repositories
             _database = new RedisClient();
         }
 
-        public async Task<Message> GetMessageById(int messageId)
+        public async Task AddMessage(Message message)
+        {
+            using (var context = new AppDbContext(_OptionsBuilder))
+            {
+                await context.Set<Message>().AddAsync(message);
+                await context.SaveChangesAsync();
+            }
+            await UpdateMessageCacheAsync(message);
+        }
+
+        public async Task UpdateMessage(Message message)
+        {
+            using (var context = new AppDbContext(_OptionsBuilder))
+            {
+                context.Set<Message>().Update(message);
+                await context.SaveChangesAsync();
+            }
+            await UpdateMessageCacheAsync(message);
+        }
+
+        public async Task<Message> SearchMessageById(int messageId)
         {
             Message? message = await GetMessageCacheAsync(messageId);
             if (message != null)
@@ -43,17 +63,30 @@ namespace MakingSolutions.Desenv.WebApi.Infra.Repository.Repositories
                 message = await context.Message.AsNoTracking().FirstOrDefaultAsync(m => m.MessageId.Equals(messageId));
                 if (message != null)
                 {
-                    await SetMessageCacheAsync(message.MessageId.ToString(), message);
+                    await UpdateMessageCacheAsync(message);
                 }
                 return message;
             }
         }
 
-        public async Task<List<Message>> ListarMessage(Expression<Func<Message, bool>> exMessage)
+        public async Task<List<Message>> ListMessage(Expression<Func<Message, bool>> exMessage)
         {
             using (var context = new AppDbContext(_OptionsBuilder))
             {
                 return await context.Message.Where(exMessage).AsNoTracking().ToListAsync();
+            }
+        }
+
+        public async Task DeleteMessage(Message message)
+        {
+            using (var context = new AppDbContext(_OptionsBuilder))
+            {
+                var messageRemove = await context.Message.AsNoTracking().FirstOrDefaultAsync(m => m.MessageId.Equals(message.MessageId));
+                if (messageRemove != null)
+                {
+                    context.Set<Message>().Remove(messageRemove);
+                    await DeleteMessageCacheAsync(messageRemove);
+                }
             }
         }
 
@@ -74,13 +107,18 @@ namespace MakingSolutions.Desenv.WebApi.Infra.Repository.Repositories
                 });
         }
 
-        public async Task SetMessageCacheAsync(string messageId, Message message)
+        public async Task UpdateMessageCacheAsync(Message message)
         {
-            await _database.StringSetAsync(messageId.ToString(), JsonConvert.SerializeObject(message, new JsonSerializerSettings
+            await _database.StringSetAsync(message.MessageId.ToString(), JsonConvert.SerializeObject(message, new JsonSerializerSettings
             {
-                ReferenceLoopHandling = ReferenceLoopHandling.Ignore,
-                //ContractResolver = new JsonHelper.LongNameContractResolver()
+                ReferenceLoopHandling = ReferenceLoopHandling.Ignore
             }));
+
+        }
+
+        public async Task DeleteMessageCacheAsync(Message message)
+        {
+            await _database.KeyDeleteAsync(message.MessageId.ToString());
 
         }
 
