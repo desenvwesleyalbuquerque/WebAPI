@@ -1,22 +1,14 @@
 ﻿using MakingSolutions.Desenv.WebApi.Domain.Interfaces.Generics;
 using MakingSolutions.Desenv.WebApi.Infra.Configuration;
-using MakingSolutions.Desenv.WebApi.Infra.Repository.Cache;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Win32.SafeHandles;
-using StackExchange.Redis;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Runtime.InteropServices;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace MakingSolutions.Desenv.WebApi.Infra.Repository.Generics
 {
     public class RepositoryGenerics<T> : IGeneric<T>, IDisposable where T : class
     {
         private readonly DbContextOptions<AppDbContext> _OptionsBuilder;
-        private readonly IConnectionMultiplexer _redis;
 
         public RepositoryGenerics()
         {

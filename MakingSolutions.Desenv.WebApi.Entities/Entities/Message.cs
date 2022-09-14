@@ -11,7 +11,7 @@ namespace MakingSolutions.Desenv.WebApi.Entities.Entities
 
         [Column("Titulo")]
         [MaxLength(255)]
-        public string Titulo { get; set; }
+        public string? Titulo { get; set; }
 
         [Column("Ativo")]
         public bool Ativo { get; set; }
@@ -24,8 +24,8 @@ namespace MakingSolutions.Desenv.WebApi.Entities.Entities
 
         [ForeignKey("ApplicationUser")]
         [Column(Order = 1)]
-        public string UserId { get; set; }
+        public string? UserId { get; set; }
 
-        public virtual ApplicationUser ApplicationUser { get; set; }
+        public virtual ApplicationUser? ApplicationUser { get; set; }
     }
 }

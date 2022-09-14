@@ -8,7 +8,7 @@ namespace MakingSolutions.Desenv.WebApi.Entities.Models
 {
     public class ConnectionStrings
     {   
-        public string AppDbContext { get; set; }
-        public string RedisCache { get; set; }
+        public string? AppDbContext { get; set; }
+        public string? RedisCache { get; set; }
     }
 }

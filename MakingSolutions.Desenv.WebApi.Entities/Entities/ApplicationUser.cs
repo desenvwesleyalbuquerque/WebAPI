@@ -7,7 +7,7 @@ namespace MakingSolutions.Desenv.WebApi.Entities.Entities
     public class ApplicationUser : IdentityUser
     {
         [Column("Cpf")]
-        public string Cpf { get; set; }
+        public string? Cpf { get; set; }
 
         [Column("TipoUsuario")]
         public TipoUsuario? Tipo { get; set; }
