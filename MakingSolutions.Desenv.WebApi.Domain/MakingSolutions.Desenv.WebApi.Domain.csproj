@@ -7,7 +7,15 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="StackExchange.Redis" Version="2.6.66" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\MakingSolutions.Desenv.WebApi.Entities\MakingSolutions.Desenv.WebApi.Entities.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Redis\" />
   </ItemGroup>
 
 </Project>

@@ -10,9 +10,9 @@ using System.Reflection;
 namespace MakingSolutions.Desenv.WebApi.Infra.Configuration
 {
 
-    public class MyDbContext : IdentityDbContext<ApplicationUser>
+    public class AppDbContext : IdentityDbContext<ApplicationUser>
     {
-        public MyDbContext(DbContextOptions<MyDbContext> options) : base(options)
+        public AppDbContext(DbContextOptions<AppDbContext> options) : base(options)
         {
         }
 

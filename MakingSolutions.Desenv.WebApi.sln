@@ -21,7 +21,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MakingSolutions.Desenv.WebA
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MakingSolutions.Desenv.WebApi.Test", "MakingSolutions.Desenv.WebApi.Test\MakingSolutions.Desenv.WebApi.Test.csproj", "{CBCF0859-C022-428F-8AD2-D8FC7E6C182F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MakingSolutions.Desenv.WebApi.Infra", "MakingSolutions.Desenv.WebApi.Infra\MakingSolutions.Desenv.WebApi.Infra.csproj", "{7DFE53F5-ACBE-425A-9FF8-F7EE509342FF}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MakingSolutions.Desenv.WebApi.Infra", "MakingSolutions.Desenv.WebApi.Infra\MakingSolutions.Desenv.WebApi.Infra.csproj", "{7DFE53F5-ACBE-425A-9FF8-F7EE509342FF}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
