@@ -38,7 +38,7 @@ namespace MakingSolutions.Desenv.WebApi.Infra.Configuration
 
         public string ObterStringConexao()
         {
-            return "Server=(localdb)\\mssqllocaldb;Database=MakingSolutions;Trusted_Connection=True;MultipleActiveResultSets=true";
+            return "Server=(localdb)\\MSSQLLocalDB;Database=MakingSolutions;Trusted_Connection=True;MultipleActiveResultSets=true";
         }
 
     }

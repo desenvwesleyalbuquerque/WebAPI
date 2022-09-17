@@ -1,6 +1,4 @@
 ﻿using MakingSolutions.Desenv.WebApi.Domain.Interfaces.Cache;
-using MakingSolutions.Desenv.WebApi.Entities.Models;
-using Microsoft.Extensions.Options;
 using StackExchange.Redis;
 
 namespace MakingSolutions.Desenv.WebApi.Infra.Repository.Cache

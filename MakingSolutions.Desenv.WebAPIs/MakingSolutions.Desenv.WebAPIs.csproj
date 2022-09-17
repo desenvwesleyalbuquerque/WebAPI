@@ -30,6 +30,4 @@
 	  <ProjectReference Include="..\MakingSolutions.Desenv.WebApi.Infra\MakingSolutions.Desenv.WebApi.Infra.csproj" />
 	</ItemGroup>
 
-
-
 </Project>
