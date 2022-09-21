@@ -55,7 +55,21 @@ namespace MakingSolutions.Desenv.WebAPIs.Controllers
                 .AddExpiry(5)
                 .Builder();
 
-                return Ok(token.value);
+                var userLog = new
+                {
+                    idUsuario = userCurrent.Id,
+                    userCurrent.UserName,
+                    userCurrent.Cpf,
+                    userCurrent.Email,
+                    userCurrent.EmailConfirmed,
+                    token = new
+                    {
+                        token.ValidTo,
+                        token = token.value
+                    }
+                };
+
+                return Ok(userLog);
             }
             else
             {

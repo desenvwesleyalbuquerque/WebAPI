@@ -40,7 +40,7 @@ namespace MakingSolutions.Desenv.WebApi.Infra.Repository.Repositories
             await UpdateMessageCacheAsync(message);
         }
 
-        public async Task<Message> SearchMessageById(int messageId)
+        public async Task<Message> SearchMessageById(Guid messageId)
         {
             Message? message = await GetMessageCacheAsync(messageId);
             if (message != null)
@@ -80,7 +80,7 @@ namespace MakingSolutions.Desenv.WebApi.Infra.Repository.Repositories
             }
         }
 
-        public async Task<Message> GetMessageCacheAsync(int messageId)
+        public async Task<Message> GetMessageCacheAsync(Guid messageId)
         {
             Message? message = null;
 

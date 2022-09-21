@@ -1,4 +1,6 @@
 using AutoMapper;
+using DocumentFormat.OpenXml.Office2016.Drawing.ChartDrawing;
+using DocumentFormat.OpenXml.Wordprocessing;
 using MakingSolutions.Desenv.WebApi.Domain.Interfaces;
 using MakingSolutions.Desenv.WebApi.Domain.Interfaces.Generics;
 using MakingSolutions.Desenv.WebApi.Domain.Interfaces.InterfaceServices;
@@ -12,7 +14,9 @@ using MakingSolutions.Desenv.WebAPIs.Token;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ApiExplorer;
+using Microsoft.AspNetCore.Mvc.Versioning;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 
@@ -83,29 +87,27 @@ var config = new AutoMapper.MapperConfiguration(cfg =>
 {
     cfg.CreateMap<MessageViewModel, Message>();
     cfg.CreateMap<Message, MessageViewModel>();
+
+    cfg.CreateMap<MessageAddViewModel, Message>();
+
 });
 
 IMapper mapper = config.CreateMapper();
 builder.Services.AddSingleton(mapper);
 
-
-builder.Services.AddVersionedApiExplorer(options =>
+builder.Services.AddVersionedApiExplorer(o =>
 {
-
-    //options.DefaultApiVersionParameterDescription = "Do NOT modify api-version!";
-    //options.AssumeDefaultVersionWhenUnspecified = true;
-
-    //options.DefaultApiVersion = new ApiVersion(1, 0);
-    //options.AssumeDefaultVersionWhenUnspecified = true;
-    options.GroupNameFormat = "'v'VVV";
-    //options.SubstituteApiVersionInUrl = true;
+    o.GroupNameFormat = "'v'VVV";
+    o.SubstituteApiVersionInUrl = true;
+});
+builder.Services.AddApiVersioning(config =>
+{
+    //config.ApiVersionReader = new UrlSegmentApiVersionReader();
+    config.DefaultApiVersion = new ApiVersion(1, 0);
+    config.AssumeDefaultVersionWhenUnspecified = true;
+    config.ReportApiVersions = true;
 });
 
-builder.Services.AddApiVersioning(setup =>
-{
-    setup.DefaultApiVersion = new ApiVersion(1, 0);
-    //setup.ReportApiVersions = true;
-});
 
 builder.Services.AddSwaggerGen(option =>
 {
@@ -150,16 +152,24 @@ builder.Services.AddSwaggerGen(option =>
 
 });
 
-
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
-//if (app.Environment.IsDevelopment())
-//{
-app.UseSwagger();
+if (app.Environment.IsDevelopment())
+{
+    app.UseSwagger();
+    app.UseSwaggerUI(options =>
+    {
 
-//}
+        var apiProvider = app.Services.GetRequiredService<IApiVersionDescriptionProvider>();
 
+        foreach (var version in apiProvider.ApiVersionDescriptions.Reverse())
+            options.SwaggerEndpoint($"/swagger/{version.GroupName}/swagger.json", $"v{version.ApiVersion}{(version.IsDeprecated ? " - Depreciada" : "")}");
+
+        //options.RoutePrefix = string.Empty;
+        options.InjectStylesheet("/swagger-ui/custom.css");
+    });
+}
 
 //var urlDev = "https://dominiodocliente.com.br";
 //var urlHML = "https://dominiodocliente2.com.br";
@@ -167,28 +177,19 @@ app.UseSwagger();
 
 //app.UseCors(b => b.WithOrigins(urlDev, urlHML, urlPROD));
 
-
 //var devClient = "http://localhost:4200";
 //app.UseCors(x => x
 //.AllowAnyOrigin()
 //.AllowAnyMethod()s
 //.AllowAnyHeader().WithOrigins(devClient));
 
-
 app.UseHttpsRedirection();
+app.UseStaticFiles();
 
 app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
-
-app.UseSwaggerUI(config =>
-{
-    var apiProvider = app.Services.GetRequiredService<IApiVersionDescriptionProvider>();
-
-    foreach (var version in apiProvider.ApiVersionDescriptions.Reverse())
-        config.SwaggerEndpoint($"/swagger/{version.GroupName}/swagger.json", $"v{version.ApiVersion}{(version.IsDeprecated ? " - Depreciada" : "")}");
-});
 
 app.Run();
 

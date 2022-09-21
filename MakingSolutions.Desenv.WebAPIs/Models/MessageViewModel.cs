@@ -2,7 +2,7 @@
 {
     public class MessageViewModel
     {
-        public int MessageId { get; set; }
+        public Guid MessageId { get; set; }
         public string? Titulo { get; set; }
         public bool Ativo { get; set; }
         public DateTime DataCadastro { get; set; }

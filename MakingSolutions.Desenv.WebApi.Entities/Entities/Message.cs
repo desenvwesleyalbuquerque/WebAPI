@@ -7,7 +7,7 @@ namespace MakingSolutions.Desenv.WebApi.Entities.Entities
     public class Message : Notifies
     {
         [Column("MessageId")]
-        public int MessageId { get; set; }
+        public Guid MessageId { get; set; }
 
         [Column("Titulo")]
         [MaxLength(255)]
@@ -20,7 +20,7 @@ namespace MakingSolutions.Desenv.WebApi.Entities.Entities
         public DateTime DataCadastro { get; set; }
 
         [Column("DataAlteracao")]
-        public DateTime DataAlteracao { get; set; }
+        public DateTime? DataAlteracao { get; set; }
 
         [ForeignKey("ApplicationUser")]
         [Column(Order = 1)]
