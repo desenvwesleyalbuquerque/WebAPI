@@ -18,12 +18,9 @@ namespace MakingSolutions.Desenv.WebApi.Domain.Services
             var validaTitulo = Objeto.ValidaPropiedadeString(Objeto.Titulo, "Título");
             if (validaTitulo)
             {
-                Objeto.DataCadastro = DateTime.Now;
-                Objeto.DataAlteracao = DateTime.Now;
                 Objeto.Ativo = true;
+                Objeto.DataCadastro = DateTime.Now;              
                 await _IMessage.AddMessage(Objeto);
-
-                //await _IMessage.Add(Objeto);
             }
         }
 
@@ -32,9 +29,17 @@ namespace MakingSolutions.Desenv.WebApi.Domain.Services
             var validaTitulo = Objeto.ValidaPropiedadeString(Objeto.Titulo, "Título");
             if (validaTitulo)
             {
-                Objeto.DataAlteracao = DateTime.Now;
+                var messageEdit = await _IMessage.SearchMessageById(Objeto.MessageId);
+                if (messageEdit is null)
+                {
+                    throw new InvalidOperationException("Mensagem não localizada na base de dados!");
+                }
+
+                messageEdit.Titulo = Objeto.Titulo;
+                messageEdit.Ativo = Objeto.Ativo;
+                messageEdit.DataAlteracao = DateTime.Now;
+
                 await _IMessage.UpdateMessage(Objeto);
-                //await _IMessage.Update(Objeto);
             }
         }
 

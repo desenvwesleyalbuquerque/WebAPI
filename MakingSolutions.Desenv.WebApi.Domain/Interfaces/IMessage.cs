@@ -8,7 +8,7 @@ namespace MakingSolutions.Desenv.WebApi.Domain.Interfaces
     {
         Task AddMessage(Message message);
         Task<List<Message>> ListMessage(Expression<Func<Message, bool>> exMessage);
-        Task<Message> SearchMessageById(int Id);
+        Task<Message> SearchMessageById(Guid Id);
         Task UpdateMessage(Message message);
         Task DeleteMessage(Message message);
     }

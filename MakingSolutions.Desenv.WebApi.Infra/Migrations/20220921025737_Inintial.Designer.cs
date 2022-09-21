@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace MakingSolutions.Desenv.WebApi.Infra.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20220901011843_Intial")]
-    partial class Intial
+    [Migration("20220921025737_Inintial")]
+    partial class Inintial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -37,7 +37,6 @@ namespace MakingSolutions.Desenv.WebApi.Infra.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Cpf")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)")
                         .HasColumnName("Cpf");
 
@@ -100,12 +99,10 @@ namespace MakingSolutions.Desenv.WebApi.Infra.Migrations
 
             modelBuilder.Entity("MakingSolutions.Desenv.WebApi.Entities.Entities.Message", b =>
                 {
-                    b.Property<int>("MessageId")
+                    b.Property<Guid>("MessageId")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
+                        .HasColumnType("uniqueidentifier")
                         .HasColumnName("MessageId");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("MessageId"), 1L, 1);
 
                     b.Property<bool>("Ativo")
                         .HasColumnType("bit")
@@ -120,13 +117,11 @@ namespace MakingSolutions.Desenv.WebApi.Infra.Migrations
                         .HasColumnName("DataCadastro");
 
                     b.Property<string>("Titulo")
-                        .IsRequired()
                         .HasMaxLength(255)
                         .HasColumnType("nvarchar(255)")
                         .HasColumnName("Titulo");
 
                     b.Property<string>("UserId")
-                        .IsRequired()
                         .HasColumnType("nvarchar(450)")
                         .HasColumnOrder(1);
 
@@ -278,9 +273,7 @@ namespace MakingSolutions.Desenv.WebApi.Infra.Migrations
                 {
                     b.HasOne("MakingSolutions.Desenv.WebApi.Entities.Entities.ApplicationUser", "ApplicationUser")
                         .WithMany()
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("UserId");
 
                     b.Navigation("ApplicationUser");
                 });

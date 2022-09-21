@@ -10,7 +10,7 @@ namespace MakingSolutions.Desenv.WebAPIs.Controllers.V2
     [Authorize]
     [ApiController]
     [ApiVersion("2.0")]
-    [Route("v{version:apiVersion}/api/[controller]")]
+    [Route("v2/api/[controller]")]
     public class MessageController : ControllerBase
     {
         private readonly IMapper _IMapper;
@@ -24,11 +24,21 @@ namespace MakingSolutions.Desenv.WebAPIs.Controllers.V2
             _IMessage = IMessage;
         }
 
+        [MapToApiVersion("2.0")]
         [Produces("application/json")]
-        [HttpPost, Route("ListActiveMessage")]
+        [HttpGet, Route("ListActiveMessage")]
         public async Task<List<MessageViewModel>> ListActiveMessage()
         {
             var mensagens = await _IMessage.ListMessage(x => x.Ativo == true);
+            var messageMap = _IMapper.Map<List<MessageViewModel>>(mensagens);
+            return messageMap;
+        }
+
+        [AllowAnonymous]
+        [HttpPost, Route("ListAll")]
+        public async Task<List<MessageViewModel>> List()
+        {
+            var mensagens = await _IMessage.List();
             var messageMap = _IMapper.Map<List<MessageViewModel>>(mensagens);
             return messageMap;
         }
