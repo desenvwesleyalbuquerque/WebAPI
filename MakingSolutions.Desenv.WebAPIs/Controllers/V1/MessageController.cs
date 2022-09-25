@@ -12,7 +12,7 @@ namespace MakingSolutions.Desenv.WebAPIs.Controllers.V1
     [Authorize]
     [ApiController]
     [ApiVersion("1.0")]
-    [Route("v1/api/[controller]")]
+    [Route("v1/api/Message")]
     public class MessageController : ControllerBase
     {
         private readonly IMapper _IMapper;
@@ -29,15 +29,17 @@ namespace MakingSolutions.Desenv.WebAPIs.Controllers.V1
         }
 
         /// <summary>
-        /// Adicionar 
+        /// Adicionar novo modelo de mensagem
         /// </summary>
         /// <param name="message"></param>
         /// <returns></returns>
         [HttpPost, Route("AddMessage")]
+        [Produces("application/json")]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<List<Notifies>> AddMessage(MessageAddViewModel message)
-        {          
+        public async Task<List<Notifies>> AddMessage(
+            [FromBody] MessageAddViewModel message)
+        {
             var messageMap = _IMapper.Map<Message>(message);
             messageMap.UserId = await RetornarIdUsuarioLogado();
             await _IServiceMessage.AddMessage(messageMap);
@@ -62,7 +64,7 @@ namespace MakingSolutions.Desenv.WebAPIs.Controllers.V1
         [Produces("application/json")]
         public async Task<List<Notifies>> DeleteMessage(MessageViewModel message)
         {
-            
+
             var messageMap = _IMapper.Map<Message>(message);
             await _IMessage.DeleteMessage(messageMap);
             return messageMap.Notificacoes;
@@ -77,8 +79,7 @@ namespace MakingSolutions.Desenv.WebAPIs.Controllers.V1
             return messageMap;
         }
 
-        [AllowAnonymous]
-        [HttpPost, Route("ListAll")]
+        [HttpGet, Route("ListAll")]
         public async Task<List<MessageViewModel>> List()
         {
             var mensagens = await _IMessage.List();
@@ -87,10 +88,9 @@ namespace MakingSolutions.Desenv.WebAPIs.Controllers.V1
         }
 
 
-        [Obsolete("Método Obsolete")]
-        [AllowAnonymous]
+        [Obsolete("Método Obsolete")]    
         [Produces("application/json")]
-        [HttpPost, Route("ListAtiveMessage")]
+        [HttpGet, Route("ListAtiveMessage")]
         public async Task<List<MessageViewModel>> ListAtiveMessage()
         {
             var mensagens = await _IServiceMessage.ListAtiveMessage();

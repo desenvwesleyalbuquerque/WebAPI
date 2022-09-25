@@ -34,7 +34,7 @@ namespace MakingSolutions.Desenv.WebAPIs.Controllers.V2
             return messageMap;
         }
 
-        [AllowAnonymous]
+  
         [HttpPost, Route("ListAll")]
         public async Task<List<MessageViewModel>> List()
         {
