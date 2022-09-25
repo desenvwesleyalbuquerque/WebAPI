@@ -177,11 +177,11 @@ if (app.Environment.IsDevelopment())
 
 //app.UseCors(b => b.WithOrigins(urlDev, urlHML, urlPROD));
 
-//var devClient = "http://localhost:4200";
-//app.UseCors(x => x
-//.AllowAnyOrigin()
-//.AllowAnyMethod()s
-//.AllowAnyHeader().WithOrigins(devClient));
+
+app.UseCors(x => x
+.AllowAnyOrigin()
+.AllowAnyMethod()
+.AllowAnyHeader().WithOrigins("http://localhost:4200", "https://localhost:4200"));
 
 app.UseHttpsRedirection();
 app.UseStaticFiles();

@@ -10,7 +10,7 @@ using System.Text;
 
 namespace MakingSolutions.Desenv.WebAPIs.Controllers
 {
-    [Route("api/[Controller]")]
+    [Route("v1/api/Users")]
     [ApiController]
     public class UsersController : ControllerBase
     {
@@ -29,7 +29,7 @@ namespace MakingSolutions.Desenv.WebAPIs.Controllers
 
         [AllowAnonymous]
         [Produces("application/json")]
-        [HttpPost("/api/CriarTokenIdentity")]
+        [HttpPost("CriarTokenIdentity")]
         public async Task<IActionResult> CriarTokenIdentity([FromBody] Login login)
         {
             if (string.IsNullOrWhiteSpace(login.email) || string.IsNullOrWhiteSpace(login.senha))
@@ -52,7 +52,7 @@ namespace MakingSolutions.Desenv.WebAPIs.Controllers
                 .AddIssuer("MakingSolutions.Securiry.Bearer")
                 .AddAudience("MakingSolutions.Securiry.Bearer")
                 .AddClaim("idUsuario", idUsuario)
-                .AddExpiry(5)
+                //.AddExpiry(720)
                 .Builder();
 
                 var userLog = new
@@ -79,7 +79,7 @@ namespace MakingSolutions.Desenv.WebAPIs.Controllers
 
         [AllowAnonymous]
         [Produces("application/json")]
-        [HttpPost("/api/AdicionaUsuarioIdentity")]
+        [HttpPost("AdicionaUsuarioIdentity")]
         public async Task<IActionResult> AdicionaUsuarioIdentity([FromBody] Login login)
         {
             if (string.IsNullOrWhiteSpace(login.email) || string.IsNullOrWhiteSpace(login.senha))
