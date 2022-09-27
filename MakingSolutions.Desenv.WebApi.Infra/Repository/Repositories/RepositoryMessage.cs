@@ -20,7 +20,7 @@ namespace MakingSolutions.Desenv.WebApi.Infra.Repository.Repositories
             _database = new RedisClient();
         }
 
-        public async Task AddMessage(Message message)
+        public async Task<Message> AddMessage(Message message)
         {
             using (var context = new AppDbContext(_OptionsBuilder))
             {
@@ -28,9 +28,11 @@ namespace MakingSolutions.Desenv.WebApi.Infra.Repository.Repositories
                 await context.SaveChangesAsync();
             }
             await UpdateMessageCacheAsync(message);
+
+            return message;
         }
 
-        public async Task UpdateMessage(Message message)
+        public async Task<Message> UpdateMessage(Message message)
         {
             using (var context = new AppDbContext(_OptionsBuilder))
             {
@@ -38,9 +40,11 @@ namespace MakingSolutions.Desenv.WebApi.Infra.Repository.Repositories
                 await context.SaveChangesAsync();
             }
             await UpdateMessageCacheAsync(message);
+
+            return message;
         }
 
-        public async Task<Message> SearchMessageById(Guid messageId)
+        public async Task<Message> SearchMessageById(string messageId)
         {
             Message? message = await GetMessageCacheAsync(messageId);
             if (message != null)
@@ -50,7 +54,7 @@ namespace MakingSolutions.Desenv.WebApi.Infra.Repository.Repositories
 
             using (var context = new AppDbContext(_OptionsBuilder))
             {
-                message = await context.Message.AsNoTracking().FirstOrDefaultAsync(m => m.MessageId.Equals(messageId));
+                message = await context.Message.FirstOrDefaultAsync(m => m.MessageId.ToString().Equals(messageId));
                 if (message != null)
                 {
                     await UpdateMessageCacheAsync(message);
@@ -63,7 +67,7 @@ namespace MakingSolutions.Desenv.WebApi.Infra.Repository.Repositories
         {
             using (var context = new AppDbContext(_OptionsBuilder))
             {
-                return await context.Message.Where(exMessage).AsNoTracking().ToListAsync();
+                return await context.Message.Include(x => x.ApplicationUser).Where(exMessage).AsNoTracking().OrderByDescending(x => x.DataCadastro).ToListAsync();
             }
         }
 
@@ -80,11 +84,11 @@ namespace MakingSolutions.Desenv.WebApi.Infra.Repository.Repositories
             }
         }
 
-        public async Task<Message> GetMessageCacheAsync(Guid messageId)
+        public async Task<Message> GetMessageCacheAsync(string messageId)
         {
             Message? message = null;
 
-            string value = await _database.StringGetAsync(messageId.ToString());
+            string value = await _database.StringGetAsync(messageId);
             if (string.IsNullOrWhiteSpace(value))
             {
                 return null;

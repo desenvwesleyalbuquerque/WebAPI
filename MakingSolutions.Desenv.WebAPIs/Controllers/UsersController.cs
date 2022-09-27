@@ -52,7 +52,7 @@ namespace MakingSolutions.Desenv.WebAPIs.Controllers
                 .AddIssuer("MakingSolutions.Securiry.Bearer")
                 .AddAudience("MakingSolutions.Securiry.Bearer")
                 .AddClaim("idUsuario", idUsuario)
-                //.AddExpiry(720)
+                .AddExpiry(720)
                 .Builder();
 
                 var userLog = new
