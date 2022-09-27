@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace MakingSolutions.Desenv.WebApi.Entities.Entities
 {
     [Table("Message")]
-    public class Message : Notifies
+    public class Message : Retorno
     {
         [Column("MessageId")]
         public Guid MessageId { get; set; }
@@ -14,7 +14,12 @@ namespace MakingSolutions.Desenv.WebApi.Entities.Entities
         public string? Titulo { get; set; }
 
         [Column("Ativo")]
-        public bool Ativo { get; set; }
+        public bool Ativo { get; set; } = true;
+
+       
+        [MaxLength(int.MaxValue)]
+        [Column("Body", TypeName = "nvarchar(MAX)")]
+        public string? Body { get; set; }
 
         [Column("DataCadastro")]
         public DateTime DataCadastro { get; set; }

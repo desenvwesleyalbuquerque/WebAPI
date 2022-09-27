@@ -37,22 +37,32 @@ namespace MakingSolutions.Desenv.WebAPIs.Controllers.V1
         [Produces("application/json")]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<List<Notifies>> AddMessage(
+        public async Task<Retorno> AddMessage(
             [FromBody] MessageAddViewModel message)
         {
             var messageMap = _IMapper.Map<Message>(message);
             messageMap.UserId = await RetornarIdUsuarioLogado();
-            await _IServiceMessage.AddMessage(messageMap);
-            return messageMap.Notificacoes;
+            var mensagem = await _IServiceMessage.AddMessage(messageMap);
+
+            return new Retorno()
+            {
+                ReturnData = _IMapper.Map<MessageViewModel>(mensagem),
+                Notifies = mensagem.Notifies
+            };
         }
 
 
         [HttpPut, Route("UpdateMessage")]
-        public async Task<List<Notifies>> Update(MessageViewModel message)
+        public async Task<Retorno> Update(MessageViewModel message)
         {
             var messageMap = _IMapper.Map<Message>(message);
-            await _IServiceMessage.UpdateMessage(messageMap);
-            return messageMap.Notificacoes;
+            var mensagem = await _IServiceMessage.UpdateMessage(messageMap);
+
+            return new Retorno()
+            {
+                ReturnData = _IMapper.Map<MessageViewModel>(mensagem),
+                Notifies = mensagem.Notifies
+            };
         }
 
         /// <summary>
@@ -62,33 +72,39 @@ namespace MakingSolutions.Desenv.WebAPIs.Controllers.V1
         /// <returns></returns>        
         [HttpDelete, Route("DeleteMessage")]
         [Produces("application/json")]
-        public async Task<List<Notifies>> DeleteMessage(MessageViewModel message)
+        public async Task<Retorno> DeleteMessage(MessageViewModel message)
         {
-
             var messageMap = _IMapper.Map<Message>(message);
             await _IMessage.DeleteMessage(messageMap);
-            return messageMap.Notificacoes;
+            return new Retorno("Removido com sucesso!");
         }
 
 
         [HttpGet, Route("SearchMessageById")]
-        public async Task<MessageViewModel> SearchMessageById(Guid id)
+        public async Task<Retorno> SearchMessageById(string messageId)
         {
-            var message = await _IMessage.SearchMessageById(id);
-            var messageMap = _IMapper.Map<MessageViewModel>(message);
-            return messageMap;
+            var message = await _IMessage.SearchMessageById(messageId);
+
+            if (message is null)
+                return new Retorno();
+
+            return new Retorno()
+            {
+                ReturnData = _IMapper.Map<MessageViewModel>(message),
+                Notifies = message.Notifies
+            };
         }
 
         [HttpGet, Route("ListAll")]
         public async Task<List<MessageViewModel>> List()
         {
-            var mensagens = await _IMessage.List();
+            var mensagens = await _IServiceMessage.ListAtiveMessage();
             var messageMap = _IMapper.Map<List<MessageViewModel>>(mensagens);
             return messageMap;
         }
 
 
-        [Obsolete("Método Obsolete")]    
+        [Obsolete("Método Obsolete")]
         [Produces("application/json")]
         [HttpGet, Route("ListAtiveMessage")]
         public async Task<List<MessageViewModel>> ListAtiveMessage()

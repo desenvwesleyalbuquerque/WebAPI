@@ -18,7 +18,6 @@ namespace MakingSolutions.Desenv.WebApi.Entities.Entities
         [NotMapped]
         public List<Notifies> Notificacoes { get; set; }
 
-
         public bool ValidaPropiedadeString(string valor, string nomePropiedade)
         {
             if (string.IsNullOrWhiteSpace(valor) || string.IsNullOrWhiteSpace(nomePropiedade))
